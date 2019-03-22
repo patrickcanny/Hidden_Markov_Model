@@ -5,40 +5,58 @@ EECS738 - Machine Learning
 from tools import FileTools
 
 class HMM():
-    def __init__(self, states):
-        self.states = states
 
-    def get_emission_prob(self):
-        pass
+    def __init__(self, filename):
+        self.filename = filename
+        self.file = FileTools.processFile(filename)
+        self.transition_matrix = {}
+        self.first_words = {}
+        self.second_words = {}
 
-    def get_transition_prob(self):
-        pass
+    def updateDict(target, key, val):
+        if key not in target:
+            target[key] = []
+        target[key].append(value)
 
-    def viterbi(obs, states, start_p, trans_p, emit_p):
-        #TODO Implement This Pseudocode
-        '''
-        for each state in our model's set of states:
-            T_1[i,1] = pi_i*B_iy_1
-            T_2[i,1] = 0
-        end for
-        for each observation:
-            for each state:
-                T_1[j,i] = max_k(T_1[k,i-1]*A_kj*B_jy_i)
-                T_2[j,i] = argmax_k(T_1[k,i-1]*A_kj*B_jy_i)
-            end for
-        end for
-        z_T = argmax_k(T_1[k,T])
-        x_T = s_Z_T
-        for i = T, T-1,...,2:
-            z_i-1 = T_2[z_i,i]
-            x_i-1 = s_z_i-1
-        end for
-        return x
-        '''
-        pass
+    def determineProbability(wordList):
+        prob_dict = {}
+        n_words = len(wordList)
+        for word in wordList:
+            prob_dict[word] = prob_dict.get(word, 0) + 1
+        for key, count in prob_dict.items():
+            prob_dict[key] = count / n_words
+        return prob_dict
 
     def train(self):
-        pass
+        print('Training on: {}'.format(self.filename))
+        self.build_matricies()
+        self.normalize_distributions()
+        print('Done Training on: {}'.format(self.filename))
+
+    def build_matricies(self):
+        for line in self.file:
+            for i in range(len(line)):
+                token = line[i]
+                if i == 0:
+                    self.first_words = self.first_words.get(token, 0) + 1
+                else:
+                    previous_token = line[i-1]
+                    if i == len(line - 1):
+                        updateDict(self.transition_matrix, (previous_token, token), 'END')
+                    if i == 1:
+                        updateDict(self.second_words, previous_token, token)
+                    else:
+                        prev_previous_token = tokens[i-2]
+                        updateDict(self.transition_matrix, (prev_previous_token, previous_token), token)
+
+    def normalize_distributions(self):
+        total_word_count = sum(self.first_words.values())
+        for key, value in self.first_words.items():
+            self.first_words[key] = value/total_word_count
+        for prev_word, next_wordList in self.second_words.items():
+            second_words[prev_word] = determineProbability(next_wordList)
+        for word_combo, next_wordList in self.transition_matrix.items():
+            transition_matrix[word_combo] = determineProbability(next_wordList)
 
     def predict(self):
         pass
