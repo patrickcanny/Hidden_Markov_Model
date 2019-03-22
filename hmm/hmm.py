@@ -61,3 +61,24 @@ class HMM():
     def predict(self):
         pass
 
+    def generate():
+        for i in range(number_of_sentences):
+            # Sentence array
+            sentence = []
+            # Initial word
+            word0 = sample_word(initial_word)
+            sentence.append(word0)
+            # Second word
+            word1 = sample_word(second_word[word0])
+            sentence.append(word1)
+            # Subsequent words untill END
+            while True:
+                word2 = sample_word(transitions[(word0, word1)])
+                if word2 == 'END':
+                    break
+                sentence.append(word2)
+                word0 = word1
+                word1 = word2
+            print(' '.join(sentence))
+
+
