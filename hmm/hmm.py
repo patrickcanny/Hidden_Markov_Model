@@ -3,9 +3,9 @@ EECS738 - Machine Learning
 @file: hmm.py
 '''
 from tools import FileTools
+import numpy as np
 
 class HMM():
-
     def __init__(self, filename):
         self.filename = filename
         self.file = FileTools.processFile(filename)
@@ -61,19 +61,29 @@ class HMM():
     def predict(self):
         pass
 
-    def generate():
+    def sample_word(dictionary):
+        p0 = np.random.random()
+        cum = 0
+        for key, value in dictionary.items():
+            cum += value
+            if p0 < cum:
+                return key
+        assert(False)
+
+
+    def generate(self, number_of_sentences):
         for i in range(number_of_sentences):
             # Sentence array
             sentence = []
             # Initial word
-            word0 = sample_word(first_words)
+            word0 = sample_word(self.first_words)
             sentence.append(word0)
             # Second word
-            word1 = sample_word(second_words[word0])
+            word1 = sample_word(self.second_words[word0])
             sentence.append(word1)
             # Subsequent words untill END
             while True:
-                word2 = sample_word(transition_matrix[(word0, word1)])
+                word2 = sample_word(self.transition_matrix[(word0, word1)])
                 if word2 == 'END':
                     break
                 sentence.append(word2)
