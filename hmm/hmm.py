@@ -2,6 +2,7 @@
 EECS738 - Machine Learning
 @file: hmm.py
 '''
+from tools import FileTools
 
 class HMM():
     def __init__(self, states):
@@ -37,5 +38,8 @@ class HMM():
         pass
 
     def train(self):
+        pass
+
+    def predict(self):
         pass
 
