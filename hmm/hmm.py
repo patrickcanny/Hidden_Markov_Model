@@ -66,14 +66,14 @@ class HMM():
             # Sentence array
             sentence = []
             # Initial word
-            word0 = sample_word(initial_word)
+            word0 = sample_word(first_words)
             sentence.append(word0)
             # Second word
-            word1 = sample_word(second_word[word0])
+            word1 = sample_word(second_words[word0])
             sentence.append(word1)
             # Subsequent words untill END
             while True:
-                word2 = sample_word(transitions[(word0, word1)])
+                word2 = sample_word(transition_matrix[(word0, word1)])
                 if word2 == 'END':
                     break
                 sentence.append(word2)
