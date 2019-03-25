@@ -49,19 +49,32 @@ class HMM():
     def predict(self):
         pass
 
-    def generate(self, number_of_sentences):
+    def generate(self, number_of_sentences, starter_sentence = ''):
         for i in range(number_of_sentences):
-            # Sentence array
-            sentence = []
+            # Sentence array with starter sentence
+            sentence = starter_sentence.split()
             # Initial word
-            word0 = self.dt.sample_word(self.first_words)
-            sentence.append(word0)
-            # Second word
-            word1 = self.dt.sample_word(self.second_words[word0])
-            sentence.append(word1)
+            if len(sentence) == 0:
+                word0 = self.dt.sample_word(self.first_words)
+                sentence.append(word0)
+                # Second word
+                word1 = self.dt.sample_word(self.second_words[word0])
+                sentence.append(word1)
+            elif len(sentence) == 1:
+                word0 = sentence
+                word1 = self.dt.sample_word(self.second_words[word0])
+            else:
+                word0 = sentence[len(sentence)-2]
+                word1 = sentence[len(sentence)-1]
+             
             # Subsequent words untill END
             while True:
-                word2 = self.dt.sample_word(self.transition_matrix[(word0, word1)])
+                try:
+                    word2 = self.dt.sample_word(self.transition_matrix[(word0, word1)])
+                except KeyError as e:
+                    print("[ERROR]: The word(s) is/are not among the words used in the trained model.")
+                    print("Try different words or a larger training set")
+                    return
                 if word2 == 'END':
                     break
                 sentence.append(word2)
